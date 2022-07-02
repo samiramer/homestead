@@ -36,3 +36,6 @@ sh -c "home/vagrant/.dot-files/install.sh"
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
 chmod u+x nvim.appimage
 mv nvim.appimage /home/vagrant/.local/bin/nvim 
+
+# Install neovim config files
+git clone git@github.com:samiramer/neovim-config.git /home/vagrant/.config/nvim
