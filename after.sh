@@ -22,20 +22,80 @@
 #curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 #sudo apt-get install -y nodejs
 
-# Install tmux
-sudo apt install -y tmux stow
+sudo apt-get install -y tmux stow \
+  ninja-build gettext libtool \
+  libtool-bin autoconf automake \
+  cmake g++ pkg-config unzip curl doxygen
+
+# Add github.com and gitlab.com to known hosts
+if [ ! -f "/home/vagrant/.ssh/known_hosts" ]; then
+  echo "Add github and gitlab to known hosts"
+  ssh-keyscan github.com >> ~/.ssh/known_hosts
+  ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+else
+  echo "SSH known hosts files already exists, skip"
+fi
 
 # Switch to ZSH
-chsh -s $(which zsh)
+echo "Switch default shell to zsh"
+sudo chsh -s $(which zsh) vagrant
+
+# Create .local/bin directory if it doesn't exist
+[ -d "home/vagrant/.local/bin" ] && "Local 'bin' folder already exists. Skipping step" || mkdir /home/vagrant/.local/bin
+
+# Install starship
+if [ ! -f "/home/vagrant/.local/bin/starship" ]; then
+  echo "Installing starship prompt"
+  curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir /home/vagrant/.local/bin
+else
+  echo "Starship prompt already installed, skipping step"
+fi
+
+# Install TPM
+if [ ! -d "home/vagrant/.tmux/plugins/tmp" ]; then
+  echo "Installing Tmux TPM"
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+else
+  echo "Tmux TPM already installed"
+fi
 
 # Install .config files
-git clone git@github.com:samiramer/dot-files-mac.git /home/vagrant/.dot-files
-sh -c "home/vagrant/.dot-files/install.sh"
+if [ ! -d "/home/vagrant/.dot-files" ]; then
+  echo "Installing dot files"
+  git clone git@github.com:samiramer/dot-files-mac.git /home/vagrant/.dot-files
+  sh -c "cd /home/vagrant/.dot-files; ./install.sh"
+else
+  echo "Dot files already exists, skipping step"
+fi
+
+# Install node version manager (nvm)
+if [ ! -d "/home/vagrant/.nvm" ]; then
+  echo "Install nvm"
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+else
+  echo "Nvm is already installed, skipping step"
+fi
 
 # Install neovim
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-chmod u+x nvim.appimage
-mv nvim.appimage /home/vagrant/.local/bin/nvim 
+if [ ! -f "/home/vagrant/.local/nvim/bin/nvim" ]; then
+  echo "Installing latest neovim release"
+  git clone https://github.com/neovim/neovim
+  cd neovim
+  git checkout stable
+  rm -r build/  # clear the CMake cache
+  make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/.local/nvim"
+  make CMAKE_BUILD_TYPE=Release
+  make install
+  cd /home/vagrant
+  rm -rf neovim
+else
+  echo "Neovim binary is already installed, skipping step"
+fi
 
 # Install neovim config files
-git clone git@github.com:samiramer/neovim-config.git /home/vagrant/.config/nvim
+if [ ! -d "/home/vagrant/.config/nvim" ]; then
+  echo "Installing neovim config files"
+  git clone git@github.com:samiramer/neovim-config.git /home/vagrant/.config/nvim
+else
+  echo "Neovim config files already exists, skipping step"
+fi
