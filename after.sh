@@ -22,7 +22,7 @@
 #curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 #sudo apt-get install -y nodejs
 
-sudo apt-get install -y tmux stow \
+sudo apt-get install -y python2 tmux stow ripgrep \
   ninja-build gettext libtool \
   libtool-bin autoconf automake \
   cmake g++ pkg-config unzip curl doxygen
@@ -99,3 +99,19 @@ if [ ! -d "/home/vagrant/.config/nvim" ]; then
 else
   echo "Neovim config files already exists, skipping step"
 fi
+
+# Install lazygit
+if [ ! -f "/home/vagrant/.local/bin/lazygit" ]; then
+  echo "Installing lazygit"
+  wget https://github.com/jesseduffield/lazygit/releases/download/v0.34/lazygit_0.34_Linux_arm64.tar.gz
+  tar -xf lazygit_0.34_Linux_arm64.tar.gz
+  mv lazygit /home/vagrant/.local/bin/lazygit
+  rm lazygit_0.34_Linux_arm64.tar.gz
+else
+  echo "Lazygit already installed, skipping step"
+fi
+
+# Linux has a file watching limit that node can easily hit when running a watcher
+# https://github.com/guard/listen/blob/master/README.md#increasing-the-amount-of-inotify-watchers
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
