@@ -22,7 +22,7 @@
 #curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 #sudo apt-get install -y nodejs
 
-sudo add-apt-repository ppa:git-core/ppa
+sudo add-apt-repository -y ppa:git-core/ppa
 sudo apt update
 
 sudo apt-get install -y python2 tmux stow ripgrep \
