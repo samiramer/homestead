@@ -22,8 +22,11 @@
 #curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 #sudo apt-get install -y nodejs
 
+sudo add-apt-repository ppa:git-core/ppa
+sudo apt update
+
 sudo apt-get install -y python2 tmux stow ripgrep \
-  ninja-build gettext libtool \
+  ninja-build gettext libtool git \
   libtool-bin autoconf automake \
   cmake g++ pkg-config unzip curl doxygen
 
