@@ -113,6 +113,14 @@ else
   echo "Lazygit already installed, skipping step"
 fi
 
+# Install fzf
+if [ ! -f "/home/vagrant/.local/bin/fzf" ]; then
+  echo "Installing fzf"
+  wget https://github.com/junegunn/fzf/releases/download/0.34.0/fzf-0.34.0-linux_arm64.tar.gz -O - | tar -xz -C ~/.local/bin/
+else
+  echo "fzf is already installed, skipping step"
+fi
+
 # Linux has a file watching limit that node can easily hit when running a watcher
 # https://github.com/guard/listen/blob/master/README.md#increasing-the-amount-of-inotify-watchers
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
