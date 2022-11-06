@@ -86,8 +86,7 @@ if [ ! -f "/home/vagrant/.local/nvim/bin/nvim" ]; then
   cd neovim
   git checkout stable
   rm -r build/  # clear the CMake cache
-  make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/.local/nvim"
-  make CMAKE_BUILD_TYPE=Release
+  make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/.local/nvim" CMAKE_BUILD_TYPE=Release
   make install
   cd /home/vagrant
   rm -rf neovim
