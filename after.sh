@@ -46,14 +46,6 @@ sudo chsh -s $(which zsh) vagrant
 # Create .local/bin directory if it doesn't exist
 [ -d "home/vagrant/.local/bin" ] && "Local 'bin' folder already exists. Skipping step" || mkdir /home/vagrant/.local/bin
 
-# Install starship
-if [ ! -f "/home/vagrant/.local/bin/starship" ]; then
-  echo "Installing starship prompt"
-  curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir /home/vagrant/.local/bin
-else
-  echo "Starship prompt already installed, skipping step"
-fi
-
 # Install TPM
 if [ ! -d "home/vagrant/.tmux/plugins/tpm" ]; then
   echo "Installing Tmux TPM"
