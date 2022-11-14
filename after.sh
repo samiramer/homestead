@@ -22,6 +22,8 @@
 #curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 #sudo apt-get install -y nodejs
 
+timedatectl set-timezone America/Toronto
+
 sudo add-apt-repository -y ppa:git-core/ppa
 sudo apt update
 
